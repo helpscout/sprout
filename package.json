@@ -28,7 +28,10 @@
     "rules": {
       "import/prefer-default-export": "off",
       "import/no-unassigned-import": "off",
-      "complexity": ["error", 10]
+      "complexity": [
+        "error",
+        10
+      ]
     }
   },
   "eslintIgnore": [
