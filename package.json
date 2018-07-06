@@ -7,7 +7,7 @@
     "add-contributor": "kcd-scripts contributors add",
     "build": "kcd-scripts build",
     "lint": "kcd-scripts lint",
-    "test": "kcd-scripts test --config=other/jest.config.js",
+    "test": "jest --watchAll",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "kcd-scripts validate",
     "setup": "npm install && npm run validate -s",
@@ -16,6 +16,9 @@
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
   "license": "MIT",
   "devDependencies": {
-    "kcd-scripts": "0.39.2"
+    "babel-plugin-transform-flow-strip-types": "6.22.0",
+    "babel-preset-flow": "6.23.0",
+    "flow-bin": "0.75.0",
+    "kcd-scripts": "^0.39.1"
   }
 }

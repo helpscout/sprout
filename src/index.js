@@ -1,58 +1,58 @@
-import ReactDOM from 'react-dom'
-import {Simulate} from 'react-dom/test-utils'
-import {getQueriesForElement, prettyDOM} from 'dom-testing-library'
+// @flow
+import cssColorNames from './data/cssColorNames.json'
+import { isHex, isRGB, convertRGBStringToShape, hexToRgb } from './utils/color'
+import { warn } from './utils/warn'
 
-const mountedContainers = new Set()
+type RGBAValue = number | string
 
-function render(ui, {container, baseElement = container} = {}) {
-  if (!container) {
-    baseElement = document.documentElement
-    container = document.body.appendChild(document.createElement('div'))
+function getHexByColorName(name: string): ?string {
+  const color = cssColorNames[name]
+  if (!color) {
+    warn(`${name} isn't a valid CSS color name.`)
   }
 
-  // we'll add it to the mounted containers regardless of whether it's actually
-  // added to document.body so the cleanup method works regardless of whether
-  // they're passing us a custom container or not.
-  mountedContainers.add(container)
+  return color
+}
 
-  ReactDOM.render(ui, container)
-  return {
-    container,
-    baseElement,
-    // eslint-disable-next-line no-console
-    debug: (el = baseElement) => console.log(prettyDOM(el)),
-    unmount: () => ReactDOM.unmountComponentAtNode(container),
-    rerender: rerenderUi => {
-      render(rerenderUi, {container, baseElement})
-      // Intentionally do not return anything to avoid unnecessarily complicating the API.
-      // folks can use all the same utilities we return in the first place that are bound to the container
-    },
-    ...getQueriesForElement(baseElement),
+export function rgba(color: string = '', value: RGBAValue = 1): string {
+  let rgb
+  let colorValue
+  let alpha = value
+
+  if (isHex(color)) {
+    rgb = hexToRgb(color)
   }
-}
-
-function cleanup() {
-  mountedContainers.forEach(cleanupAtContainer)
-}
-
-// maybe one day we'll expose this (perhaps even as a utility returned by render).
-// but let's wait until someone asks for it.
-function cleanupAtContainer(container) {
-  if (container.parentNode === document.body) {
-    document.body.removeChild(container)
+  else if (isRGB(color)) {
+    rgb = convertRGBStringToShape(color)
   }
-  ReactDOM.unmountComponentAtNode(container)
-  mountedContainers.delete(container)
+  else {
+    let hexValue = getHexByColorName(color)
+    if (!hexValue) {
+      warn(`${color} isn't a valid color.`)
+      rgb = hexToRgb('#000000')
+    } else {
+      rgb = hexToRgb(hexValue)
+    }
+  }
+
+  // Type checking
+  if (typeof alpha === 'string') {
+    alpha = parseFloat(value)
+  }
+  if (typeof alpha !== 'number') {
+    warn(`rgba: ${value} isn't a valid number.`)
+    alpha = 1
+  }
+
+  // Min/Max value checking
+  if (alpha > 1) {
+    warn(`rgba: ${value} cannot be more than 1.`)
+    alpha = 1
+  }
+  if (alpha < 0) {
+    warn(`rgba: ${value} cannot be less than 0.`)
+    alpha = 0
+  }
+
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
 }
-
-// fallback to synthetic events for React events that the DOM doesn't support
-const syntheticEvents = ['change', 'select', 'mouseEnter', 'mouseLeave']
-syntheticEvents.forEach(eventName => {
-  document.addEventListener(eventName.toLowerCase(), e => {
-    Simulate[eventName](e.target, e)
-  })
-})
-
-// just re-export everything from dom-testing-library
-export * from 'dom-testing-library'
-export {render, cleanup}
