@@ -1,0 +1,21 @@
+{
+  "name": "@helpscout/sprout",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "add-contributor": "kcd-scripts contributors add",
+    "build": "kcd-scripts build",
+    "lint": "kcd-scripts lint",
+    "test": "kcd-scripts test --config=other/jest.config.js",
+    "test:update": "npm test -- --updateSnapshot --coverage",
+    "validate": "kcd-scripts validate",
+    "setup": "npm install && npm run validate -s",
+    "precommit": "kcd-scripts precommit"
+  },
+  "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "kcd-scripts": "0.39.2"
+  }
+}
