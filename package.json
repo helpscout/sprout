@@ -9,7 +9,8 @@
     "add-contributor": "zero contributors add",
     "build": "zero build",
     "lint": "zero lint",
-    "test": "jest --watchAll",
+    "dev": "zero test --watchAll",
+    "test": "zero test",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "zero validate",
     "setup": "npm install && npm run validate -s",
@@ -18,7 +19,7 @@
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
   "license": "MIT",
   "devDependencies": {
-    "@helpscout/zero": "0.0.1"
+    "@helpscout/zero": "0.0.2"
   },
   "eslintConfig": {
     "extends": "./node_modules/@helpscout/zero/eslint.js"
