@@ -77,8 +77,11 @@ export function hexToRgb(hex: string): ?RGBShape {
     : null
 }
 
-export function rgbToHex(r: number, g: number, b: number): ?HexColor {
-  if (!isNumber(r) || !isNumber(g) || !isNumber(b)) return null
+export function rgbToHex(r: number, g: number, b: number): HexColor {
+  if (!isNumber(r) || !isNumber(g) || !isNumber(b)) {
+    return '#000000'
+  }
+
   return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`
 }
 
@@ -115,8 +118,15 @@ export function optimalTextColor(
   return shade >= 128 ? 'black' : 'white'
 }
 
-export function rgbToHsl(red: number, green: number, blue: number): ?HSLShape {
-  if (!isNumber(red) || !isNumber(green) || !isNumber(blue)) return null
+export function rgbToHsl(red: number, green: number, blue: number): HSLShape {
+  if (!isNumber(red) || !isNumber(green) || !isNumber(blue)) {
+    return {
+      h: 0,
+      s: 0,
+      l: 0,
+    }
+  }
+
   const r = red / 255
   const g = green / 255
   const b = blue / 255
@@ -189,7 +199,7 @@ export function lightenDarkenColor(color: HexColor, value: number): HexColor {
   if (g > 255) g = 255
   else if (g < 0) g = 0
 
-  return `#${  (`000000${  (g | (b << 8) | (r << 16)).toString(16)}`).slice(-6)}`
+  return `#${`000000${(g | (b << 8) | (r << 16)).toString(16)}`.slice(-6)}`
 }
 /*eslint-enable */
 

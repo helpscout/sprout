@@ -1,27 +1,20 @@
 // @flow
-import cssColorNames from './data/cssColorNames.json'
-import { isHex, isRGB, convertRGBStringToShape, hexToRgb } from './utils/color'
-import { isNumber, isString } from './utils/is'
-import { warn } from './utils/warn'
-import type {
-  CSSColorName,
-  HexColor,
-  RGBAValue,
-  RGBShape
-} from './typings/index'
+import {isNumber, isString} from './utils/is'
+import {warn} from './utils/warn'
+import Color from './Color/index'
+import type {AlphaValue} from './typings/index'
 
 /**
- * Returns a hex from a standard CSS color name.
- * @param {string} name The CSS color name.
- * @returns {?string} The hex code.
+ * JS implementation of Sass' rgba() function.
+ * @param {string} color The color.
+ * @param {number | string} value The alpha value.
+ * @returns {string} CSS compatible rgba() value.
  */
-export function getHexByColorName(name: CSSColorName): ?HexColor {
-  const color = cssColorNames[name]
-  if (!color) {
-    warn(`${name} isn't a valid CSS color name.`)
-  }
+export function rgba(color: string = '', value: AlphaValue = 1): string {
+  const rgb = new Color(color).rgb()
+  const alpha = getAlphaValue(value)
 
-  return color
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
 }
 
 /**
@@ -29,7 +22,7 @@ export function getHexByColorName(name: CSSColorName): ?HexColor {
  * @param {string | number} value The alpha value.
  * @returns {number} A valid alpha value.
  */
-export function getAlphaValue(value: RGBAValue = 1): RGBAValue {
+export function getAlphaValue(value: AlphaValue = 1): AlphaValue {
   let alpha = value
   // Type checking
   if (isString(alpha)) {
@@ -51,46 +44,6 @@ export function getAlphaValue(value: RGBAValue = 1): RGBAValue {
   }
 
   return alpha
-}
-
-/**
- * Parses and retrieves the r,g,b values (as a shape) from a color.
- * @param {string} color The color to parse.
- * @returns {Object} Object shape with r,g,b values.
- */
-export function getRGBFromColor(color: string): RGBShape {
-  const fallbackRGB: RGBShape = {r: 0, g: 0, b: 0}
-  let rgb: RGBShape = {r: 0, g: 0, b: 0}
-
-  if (isHex(color)) {
-    rgb = hexToRgb(color)
-  }
-  else if (isRGB(color)) {
-    rgb = convertRGBStringToShape(color)
-  }
-  else {
-    const hexValue = getHexByColorName(color)
-    if (!hexValue) {
-      warn(`${color} isn't a valid color.`)
-    }
-
-    rgb = hexToRgb(hexValue || '#000000')
-  }
-
-  return rgb || fallbackRGB
-}
-
-/**
- * JS implementation of Sass' rgba() function.
- * @param {string} color The color.
- * @param {number | string} value The alpha value.
- * @returns {string} CSS compatible rgba() value.
- */
-export function rgba(color: string = '', value: RGBAValue = 1): string {
-  const rgb = getRGBFromColor(color)
-  const alpha = getAlphaValue(value)
-
-  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
 }
 
 export default rgba
