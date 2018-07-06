@@ -1,8 +1,10 @@
 {
   "name": "@helpscout/sprout",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "CSS-in-JS utility functions",
+  "main": "dist/index.js",
+  "umd:main": "dist/sprout.umd.js",
+  "source": "src/index.js",
   "scripts": {
     "add-contributor": "kcd-scripts contributors add",
     "build": "kcd-scripts build",
