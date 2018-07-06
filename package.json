@@ -1,7 +1,7 @@
 {
   "name": "@helpscout/sprout",
   "version": "0.0.1",
-  "description": "CSS-in-JS utility functions",
+  "description": "Handy CSS-in-JS utilities",
   "main": "dist/index.js",
   "umd:main": "dist/sprout.umd.js",
   "source": "src/index.js",
