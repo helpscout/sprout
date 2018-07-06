@@ -1,6 +1,5 @@
 {
   "presets": [
-    "kcd-scripts/babel",
-    "flow"
+    "@helpscout/zero/babel"
   ]
 }

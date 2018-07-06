@@ -1,5 +1,5 @@
 // @flow
-import cssColorNames from './data/cssColorNames'
+import cssColorNames from './data/cssColorNames.json'
 import { isHex, isRGB, convertRGBStringToShape, hexToRgb } from './utils/color'
 import { isNumber, isString } from './utils/is'
 import { warn } from './utils/warn'

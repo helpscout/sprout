@@ -6,33 +6,22 @@
   "umd:main": "dist/sprout.umd.js",
   "source": "src/index.js",
   "scripts": {
-    "add-contributor": "kcd-scripts contributors add",
-    "build": "kcd-scripts build",
-    "lint": "kcd-scripts lint",
+    "add-contributor": "zero contributors add",
+    "build": "zero build",
+    "lint": "zero lint",
     "test": "jest --watchAll",
     "test:update": "npm test -- --updateSnapshot --coverage",
-    "validate": "kcd-scripts validate",
+    "validate": "zero validate",
     "setup": "npm install && npm run validate -s",
-    "precommit": "kcd-scripts precommit"
+    "precommit": "zero precommit"
   },
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
   "license": "MIT",
   "devDependencies": {
-    "babel-plugin-transform-flow-strip-types": "6.22.0",
-    "babel-preset-flow": "6.23.0",
-    "flow-bin": "0.75.0",
-    "kcd-scripts": "^0.39.1"
+    "@helpscout/zero": "0.0.1"
   },
   "eslintConfig": {
-    "extends": "./node_modules/kcd-scripts/eslint.js",
-    "rules": {
-      "import/prefer-default-export": "off",
-      "import/no-unassigned-import": "off",
-      "complexity": [
-        "error",
-        10
-      ]
-    }
+    "extends": "./node_modules/@helpscout/zero/eslint.js"
   },
   "eslintIgnore": [
     "node_modules",

@@ -1,3 +1,3 @@
-const jestConfig = require('kcd-scripts/jest')
+const jestConfig = require('@helpscout/zero/jest')
 
 module.exports = jestConfig
