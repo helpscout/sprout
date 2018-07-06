@@ -4,7 +4,7 @@ import { isDev } from './env'
 export function warn(message: string = '') {
   if (!isDev() || !message) return
 
-  console.warn(`Sprout: ${message}`)
+  throw new Error(`Sprout: ${message}`)
 }
 
 export default warn

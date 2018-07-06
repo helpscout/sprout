@@ -1,14 +1,18 @@
+/*eslint complexity: ["error", 15]*/
+
 // @flow
-import { isNumber, isString } from './is'
+import type {HexColor, HSLShape, RGBShape, Shade} from '../typings/index'
+import {isNumber, isString} from './is'
 
-export const isHex = (value: HexColor): boolean =>
-  isString(value) && value.indexOf('#') === 0
+export function isHex(value: HexColor): boolean {
+  return isString(value) && value.indexOf('#') === 0
+}
 
-export const isRGB = (value: string): boolean => {
+export function isRGB(value: string): boolean {
   return !!getRGBValuesFromString(value)
 }
 
-export const getRGBValuesFromString = (string: string): ?Object => {
+export function getRGBValuesFromString(string: string): ?Object {
   if (!isString(string)) return null
 
   const values = string.split(',').map(v => v.trim())
@@ -22,7 +26,7 @@ export const getRGBValuesFromString = (string: string): ?Object => {
   }
 }
 
-export const convertRGBStringToShape = (string: string): Object => {
+export function convertRGBStringToShape(string: string): Object {
   const values = getRGBValuesFromString(string)
 
   if (!values) {
@@ -30,7 +34,7 @@ export const convertRGBStringToShape = (string: string): Object => {
     return {
       r: 0,
       g: 0,
-      b: 0
+      b: 0,
     }
   }
 
@@ -47,14 +51,14 @@ const optimalTextColorValues = {
 // Source
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 
-export const componentToHex = (c: number | string): string => {
+export function componentToHex(c: number | string): string {
   if (!c || typeof c !== 'number') return '00'
   const hex = c.toString(16)
   /* istanbul ignore next */
   return hex.length === 1 ? `0${hex}` : hex
 }
 
-export const hexToRgb = (hex: string): ?RGBShape => {
+export function hexToRgb(hex: string): ?RGBShape {
   if (!isHex(hex)) return null
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
@@ -73,12 +77,12 @@ export const hexToRgb = (hex: string): ?RGBShape => {
     : null
 }
 
-export const rgbToHex = (r: number, g: number, b:number): ?HexColor => {
+export function rgbToHex(r: number, g: number, b: number): ?HexColor {
   if (!isNumber(r) || !isNumber(g) || !isNumber(b)) return null
   return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`
 }
 
-export const hexToHsl = (hex: string): ?HSLShape => {
+export function hexToHsl(hex: string): ?HSLShape {
   if (!isHex(hex)) return null
 
   const rgb = hexToRgb(hex)
@@ -87,17 +91,17 @@ export const hexToHsl = (hex: string): ?HSLShape => {
   return rgbToHsl(rgb.r, rgb.g, rgb.b)
 }
 
-export const optimalTextColor = (
+export function optimalTextColor(
   backgroundHex: string,
-  propValues: Object = optimalTextColorValues
-): ?string => {
+  propValues: Object = optimalTextColorValues,
+): ?string {
   if (!isHex(backgroundHex)) return null
   // Defaults from original formula:
   // r: 299
   // g: 587
   // b: 114
   const defaultPropValues = optimalTextColorValues
-  const { r, g, b } = Object.assign({}, defaultPropValues, propValues)
+  const {r, g, b} = Object.assign({}, defaultPropValues, propValues)
   const backgroundRgb = hexToRgb(backgroundHex)
 
   if (!backgroundRgb) {
@@ -105,24 +109,23 @@ export const optimalTextColor = (
   }
 
   const shade = Math.round(
-    (backgroundRgb.r * r + backgroundRgb.g * g + backgroundRgb.b * b) / 1000
+    (backgroundRgb.r * r + backgroundRgb.g * g + backgroundRgb.b * b) / 1000,
   )
 
   return shade >= 128 ? 'black' : 'white'
 }
 
-export const rgbToHsl = (red: number, green: number, blue: number): ?HSLShape => {
+export function rgbToHsl(red: number, green: number, blue: number): ?HSLShape {
   if (!isNumber(red) || !isNumber(green) || !isNumber(blue)) return null
-  let r = red / 255
-  let g = green / 255
-  let b = blue / 255
+  const r = red / 255
+  const g = green / 255
+  const b = blue / 255
 
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
 
-  let h
-  let s
-  let l = (max + min) / 2
+  let h, s
+  const l = (max + min) / 2
 
   if (max === min) {
     h = 0
@@ -149,16 +152,19 @@ export const rgbToHsl = (red: number, green: number, blue: number): ?HSLShape =>
     h /= 6
   }
 
+  /*eslint-disable */
   return {
     h: h % 1 !== 0 ? Math.round(h * 1e2) / 1e2 : h,
     s: s % 1 !== 0 ? Math.round(s * 1e2) / 1e2 : s,
     l: l % 1 !== 0 ? Math.round(l * 1e2) / 1e2 : l,
   }
+  /*eslint-enable */
 }
 
 // Source
 // https://css-tricks.com/snippets/javascript/lighten-darken-color/
-export const lightenDarkenColor = (color: HexColor, value: number): HexColor => {
+/*eslint-disable */
+export function lightenDarkenColor(color: HexColor, value: number): HexColor {
   /* istanbul ignore else */
   if (color[0] === '#') {
     color = color.slice(1)
@@ -183,20 +189,24 @@ export const lightenDarkenColor = (color: HexColor, value: number): HexColor => 
   if (g > 255) g = 255
   else if (g < 0) g = 0
 
-  return '#' + ('000000' + (g | (b << 8) | (r << 16)).toString(16)).slice(-6)
+  return `#${  (`000000${  (g | (b << 8) | (r << 16)).toString(16)}`).slice(-6)}`
 }
+/*eslint-enable */
 
-export const lighten = (hex: HexColor, value: number = 20): ?HexColor => {
+export function lighten(hex: HexColor, value: number = 20): ?HexColor {
   if (!isHex(hex) || typeof value !== 'number') return null
   return lightenDarkenColor(hex, value * 2.55)
 }
 
-export const darken = (hex: HexColor, value: number = 20): ?HexColor => {
+export function darken(hex: HexColor, value: number = 20): ?HexColor {
   if (!isHex(hex) || typeof value !== 'number') return null
   return lightenDarkenColor(hex, value * 2.55 * -1)
 }
 
-export const getColorShade = (hex: HexColor, propValues: RGBShape = optimalTextColorValues): ?Shade => {
+export function getColorShade(
+  hex: HexColor,
+  propValues: RGBShape = optimalTextColorValues,
+): ?Shade {
   if (!isHex(hex)) return null
 
   const hsl = hexToHsl(hex)
@@ -215,24 +225,3 @@ export const getColorShade = (hex: HexColor, propValues: RGBShape = optimalTextC
     return 'darkest'
   }
 }
-
-
-type RGBShape = {
-  r: number,
-  g: number,
-  b: number
-}
-
-type HSLShape = {
-  h: number,
-  s: number,
-  l: number
-}
-
-type HexColor = string
-
-type Shade =
-| 'lightest'
-| 'light'
-| 'dark'
-| 'darkest'

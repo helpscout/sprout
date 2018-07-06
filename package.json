@@ -20,5 +20,18 @@
     "babel-preset-flow": "6.23.0",
     "flow-bin": "0.75.0",
     "kcd-scripts": "^0.39.1"
-  }
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/kcd-scripts/eslint.js",
+    "rules": {
+      "import/prefer-default-export": "off",
+      "import/no-unassigned-import": "off",
+      "complexity": ["error", 10]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist"
+  ]
 }

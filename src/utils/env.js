@@ -1,4 +1,4 @@
-export function isDev() {
+export function isDev(): boolean {
   return (
     process &&
     process.NODE_ENV &&

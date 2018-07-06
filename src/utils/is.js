@@ -1,2 +1,3 @@
-export const isNumber = o => typeof o === 'number'
-export const isString = o => typeof o === 'string'
+// @flow
+export const isNumber = (o: ?number): boolean => typeof o === 'number'
+export const isString = (o: ?string): boolean => typeof o === 'string'

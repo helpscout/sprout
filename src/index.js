@@ -1,11 +1,15 @@
 // @flow
-import cssColorNames from './data/cssColorNames.json'
+import cssColorNames from './data/cssColorNames'
 import { isHex, isRGB, convertRGBStringToShape, hexToRgb } from './utils/color'
 import { warn } from './utils/warn'
+import type {
+  CSSColorName,
+  HexColor,
+  RGBAValue,
+  RGBShape
+} from './typings/index'
 
-type RGBAValue = number | string
-
-function getHexByColorName(name: string): ?string {
+function getHexByColorName(name: CSSColorName): ?HexColor {
   const color = cssColorNames[name]
   if (!color) {
     warn(`${name} isn't a valid CSS color name.`)
@@ -15,8 +19,8 @@ function getHexByColorName(name: string): ?string {
 }
 
 export function rgba(color: string = '', value: RGBAValue = 1): string {
-  let rgb
-  let colorValue
+  const fallbackRGB: RGBShape = {r: 0, g: 0, b: 0}
+  let rgb: RGBShape = {r: 0, g: 0, b: 0}
   let alpha = value
 
   if (isHex(color)) {
@@ -26,13 +30,12 @@ export function rgba(color: string = '', value: RGBAValue = 1): string {
     rgb = convertRGBStringToShape(color)
   }
   else {
-    let hexValue = getHexByColorName(color)
+    const hexValue = getHexByColorName(color)
     if (!hexValue) {
       warn(`${color} isn't a valid color.`)
-      rgb = hexToRgb('#000000')
-    } else {
-      rgb = hexToRgb(hexValue)
     }
+
+    rgb = hexToRgb(hexValue || '#000000')
   }
 
   // Type checking
@@ -52,6 +55,11 @@ export function rgba(color: string = '', value: RGBAValue = 1): string {
   if (alpha < 0) {
     warn(`rgba: ${value} cannot be less than 0.`)
     alpha = 0
+  }
+
+  // Fallback to black
+  if (!rgb) {
+    rgb = fallbackRGB
   }
 
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
