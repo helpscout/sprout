@@ -1,8 +1,8 @@
 // @flow
-import {isNumber, isString} from './utils/is'
-import {warn} from './utils/warn'
-import Color from './Color/index'
-import type {AlphaValue} from './typings/index'
+import {isNumber, isString} from '../utils/is'
+import {warn} from '../utils/warn'
+import Color from '../Color/index'
+import type {AlphaValue} from '../typings/index'
 
 /**
  * JS implementation of Sass' rgba() function.
@@ -10,7 +10,7 @@ import type {AlphaValue} from './typings/index'
  * @param {number | string} value The alpha value.
  * @returns {string} CSS compatible rgba() value.
  */
-export function rgba(color: string = '', value: AlphaValue = 1): string {
+function rgba(color: string = '', value: AlphaValue = 1): string {
   const rgb = new Color(color).rgb()
   const alpha = getAlphaValue(value)
 

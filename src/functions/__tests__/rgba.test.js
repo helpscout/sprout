@@ -1,4 +1,4 @@
-import { rgba } from '../index'
+import rgba from '../rgba'
 
 test('Converts color names to rgb', () => {
   expect(rgba('black')).toEqual('rgba(0, 0, 0, 1)')
