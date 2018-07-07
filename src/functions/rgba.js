@@ -33,15 +33,7 @@ export function getAlphaValue(value: AlphaValue = 1): AlphaValue {
     alpha = 1
   }
 
-  // Min/Max value checking
-  if (alpha > 1) {
-    warn(`rgba: ${value} cannot be more than 1.`)
-    alpha = 1
-  }
-  if (alpha < 0) {
-    warn(`rgba: ${value} cannot be less than 0.`)
-    alpha = 0
-  }
+  alpha = Math.min(1, Math.max(0, alpha))
 
   return alpha
 }
