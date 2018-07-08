@@ -124,3 +124,35 @@ export function getHslFromRGB(rgb: RGBShape): HSLShape {
 
   return rgbToHsl(r, g, b)
 }
+
+/**
+ * Combines 2 color (RGBA) values together.
+ * Source:
+ * https://github.com/Qix-/color/blob/master/index.js#L366
+ *
+ * @param {Object} rgb1 The first RGBA shape.
+ * @param {Object} rgb2 The second RGBA shape.
+ * @param {number} weight The amount of the 2nd color to use during mixing.
+ * @returns {Object} The mixed RGBA value
+ */
+export function mixRGBAValues(
+  rgb1: RGBShape,
+  rgb2: RGBShape,
+  weight: number = 0.5,
+): RGBShape {
+  const color1 = safeGetRGBShape(rgb1)
+  const color2 = safeGetRGBShape(rgb2)
+
+  const w = 2 * weight - 1
+  const a = color1.a - color2.a
+
+  const w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
+  const w2 = 1 - w1
+
+  return {
+    r: w1 * color1.r + w2 * color2.r,
+    g: w1 * color1.g + w2 * color2.g,
+    b: w1 * color1.b + w2 * color2.b,
+    a: color1.a * weight + color2.a * (1 - weight),
+  }
+}

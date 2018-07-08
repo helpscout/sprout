@@ -2,7 +2,7 @@
 
 // @flow
 import type {HexColor, HSLShape, RGBShape, Shade} from '../typings/index'
-import {isNumber, isObject, isString} from './is'
+import {isDefined, isNumber, isObject, isString} from './is'
 
 export function isHex(value: HexColor): boolean {
   return isString(value) && value.indexOf('#') === 0
@@ -13,7 +13,7 @@ export function isRGB(value: any): boolean {
     return !!getRGBValuesFromString(value)
   }
   if (isObject(value)) {
-    return !!(value.r && value.g && value.b)
+    return !!(isDefined(value.r) && isDefined(value.g) && isDefined(value.b))
   }
   return false
 }
@@ -59,7 +59,7 @@ const optimalTextColorValues = {
 
 export function componentToHex(c: number | string): string {
   if (!c || typeof c !== 'number') return '00'
-  const hex = c.toString(16)
+  const hex = Math.round(c).toString(16)
   /* istanbul ignore next */
   return hex.length === 1 ? `0${hex}` : hex
 }

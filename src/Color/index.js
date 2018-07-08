@@ -1,13 +1,12 @@
 // @flow
-import type {
-  AlphaValue,
-  ColorValue,
-  ColorModel,
-  HexColor,
-  Shade,
-} from '../typings/index'
+import type {AlphaValue, ColorValue, ColorModel, Shade} from '../typings/index'
 import {darken, lighten, getColorShade} from '../utils/color'
-import {getHexFromRGB, getHslFromRGB, getRGBFromColor} from './utils'
+import {
+  getHexFromRGB,
+  getHslFromRGB,
+  getRGBFromColor,
+  mixRGBAValues,
+} from './utils'
 
 type ColorClass = Object
 
@@ -35,11 +34,13 @@ class Color {
     const hsl = getHslFromRGB(rgb)
     const hex = getHexFromRGB(rgb)
     const shade = getColorShade(hex)
+    const rgba = {...rgb, a: alpha}
 
     this._color = {
       hex,
       hsl,
       rgb,
+      rgba,
       alpha,
       shade,
     }
@@ -118,6 +119,16 @@ class Color {
     const newHex = lighten(hex, amount)
 
     this.setColor(newHex, colors.alpha)
+
+    return this
+  }
+
+  mix(value: ColorValue, weight: number): ColorClass {
+    const color1RGBA = this.getColor().rgba
+    const color2RGBA = new Color(value).getColor().rgba
+    const newHex = getHexFromRGB(mixRGBAValues(color1RGBA, color2RGBA, weight))
+
+    this.setColor(newHex)
 
     return this
   }
