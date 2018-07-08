@@ -11,10 +11,9 @@ import type {AlphaValue} from '../typings/index'
  * @returns {string} CSS compatible rgba() value.
  */
 function rgba(color: string = '', value: AlphaValue = 1): string {
-  const rgb = new Color(color).rgb()
-  const alpha = getAlphaValue(value)
+  const colorValue = new Color(color).rgba().alpha(getAlphaValue(value))
 
-  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
+  return colorValue.toString()
 }
 
 /**
