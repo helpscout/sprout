@@ -40,3 +40,87 @@ describe('toString', () => {
     expect(new Color('black').hsla().toString()).toEqual('hsla(0, 0, 0, 1)')
   })
 })
+
+describe('Lighten', () => {
+  test('Can lighten a color to a specified value', () => {
+    expect(
+      new Color('#000')
+        .lighten(20)
+        .hex()
+        .toString(),
+    ).toEqual('#333333')
+    expect(
+      new Color('black')
+        .lighten(20)
+        .hex()
+        .toString(),
+    ).toEqual('#333333')
+    expect(
+      new Color('#000')
+        .lighten(10)
+        .rgb()
+        .toString(),
+    ).toEqual('rgb(25, 25, 25)')
+  })
+
+  test('Can lighten a color to a 0 value', () => {
+    expect(
+      new Color('#000')
+        .lighten(0)
+        .hex()
+        .toString(),
+    ).toEqual('#000000')
+    expect(
+      new Color('black')
+        .lighten(0)
+        .hex()
+        .toString(),
+    ).toEqual('#000000')
+  })
+})
+
+describe('Darken', () => {
+  test('Can darken a color to a specified value', () => {
+    expect(
+      new Color('#fff')
+        .darken(20)
+        .hex()
+        .toString(),
+    ).toEqual('#cccccc')
+    expect(
+      new Color('white')
+        .darken(20)
+        .hex()
+        .toString(),
+    ).toEqual('#cccccc')
+    expect(
+      new Color('#fff')
+        .darken(10)
+        .rgb()
+        .toString(),
+    ).toEqual('rgb(229, 229, 229)')
+  })
+
+  test('Can darken a color to a 0 value', () => {
+    expect(
+      new Color('#fff')
+        .darken(0)
+        .hex()
+        .toString(),
+    ).toEqual('#ffffff')
+    expect(
+      new Color('white')
+        .darken(0)
+        .hex()
+        .toString(),
+    ).toEqual('#ffffff')
+  })
+})
+
+describe('Shade', () => {
+  test('Returns darkest for darkest shades', () => {
+    expect(new Color('#000').shade()).toEqual('darkest')
+    expect(new Color('#111').shade()).toEqual('darkest')
+    expect(new Color('#103010').shade()).toEqual('darkest')
+  })
+})

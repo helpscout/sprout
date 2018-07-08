@@ -1,5 +1,12 @@
 // @flow
-import type {AlphaValue, ColorValue, ColorModel} from '../typings/index'
+import type {
+  AlphaValue,
+  ColorValue,
+  ColorModel,
+  HexColor,
+  Shade,
+} from '../typings/index'
+import {darken, lighten, getColorShade} from '../utils/color'
 import {getHexFromRGB, getHslFromRGB, getRGBFromColor} from './utils'
 
 type ColorClass = Object
@@ -27,12 +34,14 @@ class Color {
     const rgb = getRGBFromColor(value)
     const hsl = getHslFromRGB(rgb)
     const hex = getHexFromRGB(rgb)
+    const shade = getColorShade(hex)
 
     this._color = {
       hex,
       hsl,
       rgb,
       alpha,
+      shade,
     }
 
     return this
@@ -83,6 +92,42 @@ class Color {
 
   toString(): string {
     return colorInstanceToString(this)
+  }
+
+  darken(amount: number = 20): ColorClass {
+    if (!amount) {
+      return this
+    }
+
+    const colors = this.getColor()
+    const hex = getHexFromRGB(colors.rgb)
+    const newHex = darken(hex, amount)
+
+    this.setColor(newHex, colors.alpha)
+
+    return this
+  }
+
+  lighten(amount: number = 20): ColorClass {
+    if (!amount) {
+      return this
+    }
+
+    const colors = this.getColor()
+    const hex = getHexFromRGB(colors.rgb)
+    const newHex = lighten(hex, amount)
+
+    this.setColor(newHex, colors.alpha)
+
+    return this
+  }
+
+  clone(): ColorClass {
+    return new Color(this.hex())
+  }
+
+  shade(): Shade {
+    return this.getColor().shade
   }
 }
 

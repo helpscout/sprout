@@ -2,14 +2,20 @@
 
 // @flow
 import type {HexColor, HSLShape, RGBShape, Shade} from '../typings/index'
-import {isNumber, isString} from './is'
+import {isNumber, isObject, isString} from './is'
 
 export function isHex(value: HexColor): boolean {
   return isString(value) && value.indexOf('#') === 0
 }
 
-export function isRGB(value: string): boolean {
-  return !!getRGBValuesFromString(value)
+export function isRGB(value: any): boolean {
+  if (isString(value)) {
+    return !!getRGBValuesFromString(value)
+  }
+  if (isObject(value)) {
+    return !!(value.r && value.g && value.b)
+  }
+  return false
 }
 
 export function getRGBValuesFromString(string: string): ?Object {
