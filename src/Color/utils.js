@@ -15,6 +15,7 @@ import {
   isRGB,
   convertRGBStringToShape,
   hexToRgb,
+  hslToRgb,
   rgbToHex,
   rgbToHsl,
 } from '../utils/color'
@@ -112,6 +113,17 @@ export function getHexFromRGB(rgb: RGBShape): HexColor {
   const {r, g, b} = safeGetRGBShape(rgb)
 
   return rgbToHex(r, g, b)
+}
+
+/**
+ * Converts a RGB data shape to a hex color.
+ * @param {Object} hsl The RGB data shape.
+ * @returns {string} The hex color.
+ */
+export function getHexFromHSL(hsl: HSLShape): HexColor {
+  const {h, s, l} = hsl
+
+  return getHexFromRGB(hslToRgb(h, s, l))
 }
 
 /**

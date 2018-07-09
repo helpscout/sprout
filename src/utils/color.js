@@ -177,46 +177,52 @@ export function rgbToHsl(red: number, green: number, blue: number): HSLShape {
   /*eslint-enable */
 }
 
-// Source
-// https://css-tricks.com/snippets/javascript/lighten-darken-color/
-/*eslint-disable */
-export function lightenDarkenColor(color: HexColor, value: number): HexColor {
-  /* istanbul ignore else */
-  if (color[0] === '#') {
-    color = color.slice(1)
-  }
+/**
+ * Converts a hue to an RGB value.
+ * Source:
+ * https://github.com/micro-js/hsl-to-rgb/blob/master/lib/index.js
+ *
+ * @param {number} p P value.
+ * @param {number} q Q value.
+ * @param {number} t T value.
+ * @returns {number} RBB value.
+ */
+export function hueToRgb(p: number, q: number, t: number): number {
+  if (t < 0) t += 1
+  if (t > 1) t -= 1
+  if (t < 1 / 6) return p + (q - p) * 6 * t
+  if (t < 1 / 2) return q
+  if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
 
-  /* istanbul ignore next */
-  if (color.length === 3) {
-    color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2]
-  }
-
-  const num = parseInt(color, 16)
-
-  let r = (num >> 16) + value
-  if (r > 255) r = 255
-  else if (r < 0) r = 0
-
-  let b = ((num >> 8) & 0x00ff) + value
-  if (b > 255) b = 255
-  else if (b < 0) b = 0
-
-  let g = (num & 0x0000ff) + value
-  if (g > 255) g = 255
-  else if (g < 0) g = 0
-
-  return `#${`000000${(g | (b << 8) | (r << 16)).toString(16)}`.slice(-6)}`
-}
-/*eslint-enable */
-
-export function lighten(hex: HexColor, value: number = 20): ?HexColor {
-  if (!isHex(hex) || typeof value !== 'number') return null
-  return lightenDarkenColor(hex, value * 2.55)
+  return p
 }
 
-export function darken(hex: HexColor, value: number = 20): ?HexColor {
-  if (!isHex(hex) || typeof value !== 'number') return null
-  return lightenDarkenColor(hex, value * 2.55 * -1)
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @returns {Object}          The RGB representation
+ */
+export function hslToRgb(h: number, s: number, l: number): RGBShape {
+  h /= 360
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+
+  const r = Math.floor(hueToRgb(p, q, h + 1 / 3) * 255)
+  const g = Math.floor(hueToRgb(p, q, h) * 255)
+  const b = Math.floor(hueToRgb(p, q, h - 1 / 3) * 255)
+
+  return {
+    r: Math.max(0, Math.min(r, 255)),
+    g: Math.max(0, Math.min(g, 255)),
+    b: Math.max(0, Math.min(b, 255)),
+  }
 }
 
 export function getColorShade(

@@ -1,8 +1,9 @@
 // @flow
 import type {AlphaValue, ColorValue, ColorModel, Shade} from '../typings/index'
-import {darken, lighten, getColorShade} from '../utils/color'
+import {getColorShade} from '../utils/color'
 import {
   getHexFromRGB,
+  getHexFromHSL,
   getHslFromRGB,
   getRGBFromColor,
   mixRGBAValues,
@@ -101,8 +102,9 @@ class Color {
     }
 
     const colors = this.getColor()
-    const hex = getHexFromRGB(colors.rgb)
-    const newHex = darken(hex, amount)
+    const hsl = colors.hsl
+    hsl.l = hsl.l - amount / 100
+    const newHex = getHexFromHSL(hsl)
 
     this.setColor(newHex, colors.alpha)
 
@@ -115,8 +117,9 @@ class Color {
     }
 
     const colors = this.getColor()
-    const hex = getHexFromRGB(colors.rgb)
-    const newHex = lighten(hex, amount)
+    const hsl = colors.hsl
+    hsl.l = hsl.l + amount / 100
+    const newHex = getHexFromHSL(hsl)
 
     this.setColor(newHex, colors.alpha)
 
