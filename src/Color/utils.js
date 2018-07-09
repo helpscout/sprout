@@ -15,6 +15,7 @@ import {
   isRGB,
   convertRGBStringToShape,
   hexToRgb,
+  hslToRgb,
   rgbToHex,
   rgbToHsl,
 } from '../utils/color'
@@ -115,6 +116,17 @@ export function getHexFromRGB(rgb: RGBShape): HexColor {
 }
 
 /**
+ * Converts a RGB data shape to a hex color.
+ * @param {Object} hsl The RGB data shape.
+ * @returns {string} The hex color.
+ */
+export function getHexFromHSL(hsl: HSLShape): HexColor {
+  const {h, s, l} = hsl
+
+  return getHexFromRGB(hslToRgb(h, s, l))
+}
+
+/**
  * Converts a RGB data shape to HSL.
  * @param {Object} rgb The RGB data shape.
  * @returns {Object} The HSL data shape.
@@ -123,4 +135,36 @@ export function getHslFromRGB(rgb: RGBShape): HSLShape {
   const {r, g, b} = safeGetRGBShape(rgb)
 
   return rgbToHsl(r, g, b)
+}
+
+/**
+ * Combines 2 color (RGBA) values together.
+ * Source:
+ * https://github.com/Qix-/color/blob/master/index.js#L366
+ *
+ * @param {Object} rgb1 The first RGBA shape.
+ * @param {Object} rgb2 The second RGBA shape.
+ * @param {number} weight The amount of the 2nd color to use during mixing.
+ * @returns {Object} The mixed RGBA value
+ */
+export function mixRGBAValues(
+  rgb1: RGBShape,
+  rgb2: RGBShape,
+  weight: number = 0.5,
+): RGBShape {
+  const color1 = safeGetRGBShape(rgb1)
+  const color2 = safeGetRGBShape(rgb2)
+
+  const w = 2 * weight - 1
+  const a = color1.a - color2.a
+
+  const w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
+  const w2 = 1 - w1
+
+  return {
+    r: w1 * color1.r + w2 * color2.r,
+    g: w1 * color1.g + w2 * color2.g,
+    b: w1 * color1.b + w2 * color2.b,
+    a: color1.a * weight + color2.a * (1 - weight),
+  }
 }
