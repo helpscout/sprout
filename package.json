@@ -19,7 +19,7 @@
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
   "license": "MIT",
   "devDependencies": {
-    "@helpscout/zero": "0.0.5"
+    "@helpscout/zero": "0.0.6"
   },
   "eslintConfig": {
     "extends": "./node_modules/@helpscout/zero/eslint.js"
