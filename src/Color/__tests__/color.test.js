@@ -67,6 +67,15 @@ describe('Lighten', () => {
     ).toEqual('rgb(25, 25, 25)')
   })
 
+  test('Lightens to 20, by default', () => {
+    expect(
+      new Color('#000')
+        .lighten(20)
+        .hex()
+        .toString(),
+    ).toEqual('#333333')
+  })
+
   test('Can lighten a color to a 0 value', () => {
     expect(
       new Color('#000')
@@ -103,6 +112,15 @@ describe('Darken', () => {
         .rgb()
         .toString(),
     ).toEqual('rgb(229, 229, 229)')
+  })
+
+  test('Darkens to 20, by default', () => {
+    expect(
+      new Color('#fff')
+        .darken()
+        .hex()
+        .toString(),
+    ).toEqual('#cccccc')
   })
 
   test('Can darken a color to a 0 value', () => {

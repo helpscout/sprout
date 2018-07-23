@@ -3,6 +3,7 @@ import cssColorNames from '../data/cssColorNames.json'
 import {isNumber, isString} from '../utils/is'
 import {warn} from '../utils/warn'
 import type {
+  ColorMode,
   ColorValue,
   CSSColorName,
   HexColor,
@@ -22,6 +23,14 @@ import {
 
 const fallbackRGB: RGBShape = {r: 0, g: 0, b: 0}
 
+export const COLOR_MODE: ColorMode = {
+  hex: 'hex',
+  rgb: 'rgb',
+  rgba: 'rgba',
+  hsl: 'hsl',
+  hsla: 'hsla',
+}
+
 /**
  * Returns a hex from a standard CSS color name.
  * @param {string} name The CSS color name.
@@ -34,35 +43,6 @@ export function getHexByColorName(name: CSSColorName): ?HexColor {
   }
 
   return color
-}
-
-/**
- * Parses and returns a valid alpha value.
- * @param {string | number} value The alpha value.
- * @returns {number} A valid alpha value.
- */
-export function getAlphaValue(value: RGBAValue = 1): RGBAValue {
-  let alpha = value
-  // Type checking
-  if (isString(alpha)) {
-    alpha = parseFloat(value)
-  }
-  if (!isNumber(alpha)) {
-    warn(`rgba: ${value} isn't a valid number.`)
-    alpha = 1
-  }
-
-  // Min/Max value checking
-  if (alpha > 1) {
-    warn(`rgba: ${value} cannot be more than 1.`)
-    alpha = 1
-  }
-  if (alpha < 0) {
-    warn(`rgba: ${value} cannot be less than 0.`)
-    alpha = 0
-  }
-
-  return alpha
 }
 
 /**
@@ -166,5 +146,40 @@ export function mixRGBAValues(
     g: w1 * color1.g + w2 * color2.g,
     b: w1 * color1.b + w2 * color2.b,
     a: color1.a * weight + color2.a * (1 - weight),
+  }
+}
+
+/**
+ * Generates the CSS color string value.
+ *
+ * @param {Object} colorInstance The color class instance.
+ * @returns {string} The CSS color string value.
+ */
+export function colorInstanceToString(colorInstance: Object): string {
+  const color = colorInstance.getColor()
+  const mode = colorInstance.getMode()
+
+  switch (mode) {
+    case COLOR_MODE.hex:
+      return color.hex
+
+    case COLOR_MODE.rgb:
+      return `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`
+
+    case COLOR_MODE.rgba:
+      return `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${
+        color.alpha
+      })`
+
+    case COLOR_MODE.hsl:
+      return `hsl(${color.hsl.h}, ${color.hsl.s}, ${color.hsl.l})`
+
+    case COLOR_MODE.hsla:
+      return `hsla(${color.hsl.h}, ${color.hsl.s}, ${color.hsl.l}, ${
+        color.alpha
+      })`
+
+    default:
+      return color.hex
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@helpscout/sprout",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Handy CSS-in-JS utilities",
   "main": "dist/index.js",
   "umd:main": "dist/sprout.umd.js",
@@ -10,7 +10,7 @@
     "build": "zero build",
     "lint": "zero lint",
     "dev": "zero test --watchAll",
-    "test": "zero test",
+    "test": "zero test --coverage",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "zero validate",
     "setup": "npm install && npm run validate -s",
@@ -19,7 +19,7 @@
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
   "license": "MIT",
   "devDependencies": {
-    "@helpscout/zero": "0.0.6"
+    "@helpscout/zero": "0.0.7"
   },
   "eslintConfig": {
     "extends": "./node_modules/@helpscout/zero/eslint.js"

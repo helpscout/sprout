@@ -24,3 +24,5 @@ export type ColorModel = {
   rgb: RGBShape,
   alpha: AlphaValue,
 }
+
+type ColorMode = 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla'

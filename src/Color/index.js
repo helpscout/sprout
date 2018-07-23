@@ -1,7 +1,15 @@
 // @flow
-import type {AlphaValue, ColorValue, ColorModel, Shade} from '../typings/index'
+import type {
+  AlphaValue,
+  ColorValue,
+  ColorModel,
+  ColorMode,
+  Shade,
+} from '../typings/index'
 import {getColorShade} from '../utils/color'
 import {
+  COLOR_MODE,
+  colorInstanceToString,
   getHexFromRGB,
   getHexFromHSL,
   getHslFromRGB,
@@ -10,16 +18,6 @@ import {
 } from './utils'
 
 type ColorClass = Object
-
-type ColorMode = 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla'
-
-const COLOR_MODE = {
-  hex: 'hex',
-  rgb: 'rgb',
-  rgba: 'rgba',
-  hsl: 'hsl',
-  hsla: 'hsla',
-}
 
 class Color {
   _color: ColorModel
@@ -136,47 +134,8 @@ class Color {
     return this
   }
 
-  clone(): ColorClass {
-    return new Color(this.hex())
-  }
-
   shade(): Shade {
     return this.getColor().shade
-  }
-}
-
-/**
- * Generates the CSS color string value.
- *
- * @param {Object} colorInstance The color class instance.
- * @returns {string} The CSS color string value.
- */
-export function colorInstanceToString(colorInstance: Object): string {
-  const color = colorInstance.getColor()
-  const mode = colorInstance.getMode()
-
-  switch (mode) {
-    case COLOR_MODE.hex:
-      return color.hex
-
-    case COLOR_MODE.rgb:
-      return `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`
-
-    case COLOR_MODE.rgba:
-      return `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${
-        color.alpha
-      })`
-
-    case COLOR_MODE.hsl:
-      return `hsl(${color.hsl.h}, ${color.hsl.s}, ${color.hsl.l})`
-
-    case COLOR_MODE.hsla:
-      return `hsla(${color.hsl.h}, ${color.hsl.s}, ${color.hsl.l}, ${
-        color.alpha
-      })`
-
-    default:
-      return color.hex
   }
 }
 

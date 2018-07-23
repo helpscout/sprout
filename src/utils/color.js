@@ -1,8 +1,15 @@
 /*eslint complexity: ["error", 15]*/
 
 // @flow
-import type {HexColor, HSLShape, RGBShape, Shade} from '../typings/index'
+import type {
+  AlphaValue,
+  HexColor,
+  HSLShape,
+  RGBShape,
+  Shade,
+} from '../typings/index'
 import {isDefined, isNumber, isObject, isString} from './is'
+import warn from './warn'
 
 export function isHex(value: HexColor): boolean {
   return isString(value) && value.indexOf('#') === 0
@@ -246,4 +253,28 @@ export function getColorShade(
   } else {
     return 'darkest'
   }
+}
+
+/**
+ * Parses and returns a valid alpha value.
+ * @param {string | number} value The alpha value.
+ * @returns {number} A valid alpha value.
+ */
+export function getAlphaValue(value: AlphaValue = 1): AlphaValue {
+  let alpha = value
+  // Type checking
+  if (isString(alpha)) {
+    alpha = parseFloat(value)
+  }
+  if (isNaN(alpha)) {
+    alpha = 1
+  }
+  if (!isNumber(alpha)) {
+    warn(`rgba: ${value} isn't a valid number.`)
+    alpha = 1
+  }
+
+  alpha = Math.min(1, Math.max(0, alpha))
+
+  return alpha
 }
